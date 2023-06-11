@@ -14,8 +14,8 @@
     "minimum-stability": "dev",
     "require": {
         "rebing/graphql-laravel": "*",
-        "laravel/passport": "^4.0",
-        "doctrine/dbal": "^2.5"
+        "laravel/passport": "*",
+        "doctrine/dbal": "*"
     },
     "autoload": {
         "psr-4": {
