@@ -9,7 +9,7 @@
     }],
     "minimum-stability": "dev",
     "require": {
-        "folklore/graphql": "~1.0.0",
+        "rebing/graphql-laravel": "^1.16",
         "laravel/passport": "^4.0",
         "doctrine/dbal": "^2.5"
     },
