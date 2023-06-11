@@ -13,7 +13,7 @@
     }],
     "minimum-stability": "dev",
     "require": {
-        "rebing/graphql-laravel": "^1.16",
+        "rebing/graphql-laravel": "*",
         "laravel/passport": "^4.0",
         "doctrine/dbal": "^2.5"
     },
