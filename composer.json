@@ -6,6 +6,10 @@
     "authors": [{
         "name": "Gaber abdo",
         "email": "futureslasher@gmail.com"
+    },
+    {
+        "name": "Mahmoud Mu",
+        "email": "mahmoudmn810@gmail.com"
     }],
     "minimum-stability": "dev",
     "require": {
