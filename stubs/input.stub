@@ -1,0 +1,69 @@
+<?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+namespace App\GraphQL\Type;
+
+use GraphQL;
+use GraphQL\Type\Definition\Type;
+use Folklore\GraphQL\Support\Type as GraphQLType;
+
+class DummyClass extends {$name}Type {
+
+    protected $attributes = [
+        'name' => 'A {$name}',
+        'description' => '{$description}'
+    ];
+
+
+    /*
+     * Uncomment following line to make the type input object.
+     * http://graphql.org/learn/schema/#input-types
+     */
+
+     protected $inputObject = true;
+      
+     
+     public function __construct($attributes = array()) {
+         parent::__construct($attributes);
+     }
+
+     public static function getObjects(){
+         return json_decode('{$inputSpecific}');
+     }
+     
+     
+     public function unsetFields($arr){
+         if(empty($arr))
+             return ;
+         $this->exclude = $arr;
+         foreach($arr as $field){
+             unset($this->__fields[$field]);
+         }
+     }
+
+     public function attachTypes($arr){
+         if(empty($arr))
+             return ;
+         foreach(array_filter($arr) as $k => $field){  
+            $this->__fields[$field->plural] = ['type' => Type::listOf(Type::int())];
+         }
+     }
+     
+     public function fields() {
+         parent::fields() ;
+         $this->unsetFields({$values});
+         $this->attachTypes((array) json_decode('{$inputSpecific}'));
+         return $this->__fields ;
+         
+     }
+     
+    
+
+
+
+}

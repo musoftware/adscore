@@ -1,0 +1,32 @@
+<?php
+
+namespace App\GraphQL\Query;
+
+use GraphQL;
+use GraphQL\Type\Definition\Type;
+use Folklore\GraphQL\Support\Query;
+
+class DummyClass extends Query
+{
+    protected $attributes = [
+        'name' => '{$name}'
+    ];
+
+    public function type()
+    {
+        return GraphQL::type('{$name}QueryType');
+    }
+    
+
+    public function args()
+    {
+        return [
+
+        ];
+    }
+
+    public function resolve($root, $args)
+    {
+        return true ;
+    }
+}

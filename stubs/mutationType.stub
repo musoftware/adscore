@@ -1,0 +1,141 @@
+<?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+namespace App\GraphQL\Type;
+
+use GraphQL;
+use GraphQL\Type\Definition\Type;
+use Folklore\GraphQL\Support\Type as GraphQLType;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
+class DummyClass extends {$name}QueryType {
+
+    protected $modelName = '\App\Models\{$modelName}';
+
+    protected $attributes = [
+        'name' => '{$name} mutation',
+        'description' => 'mutation {$description}'
+    ];
+
+    /*
+     * Uncomment following line to make the type input object.
+     * http://graphql.org/learn/schema/#input-types
+     */
+
+    // protected $inputObject = true;
+
+    public function fields() {
+        return [
+            'Create' => [
+                'type' => GraphQL::type("{$single}"),
+                'args' => [
+                  '{$name}' => ['name' => '{$name}', 'type' => GraphQL::type('{$name}Input')]
+                ]
+            ],
+            'Update' => [
+                'type' => GraphQL::type("{$single}"),
+                'args' => [
+                '{$name}' => ['name' => '{$name}', 'type' => GraphQL::type('{$name}Input')],
+                'New' => ['name' => 'New', 'type' => GraphQL::type('{$name}Input')]
+                ]
+            ],
+            'Delete' => [
+                'type' => GraphQL::type("BooleanReportSingleResponse"),
+                'args' => [
+                '{$name}' => ['name' => '{$name}', 'type' => GraphQL::type('{$name}Input')]
+                ]
+            ]
+        ];
+    }
+
+    protected function resolveCreateField($root, $args) {
+        ${$name} = isset($args['{$name}']) ? $args['{$name}'] : false;
+        if($this->isAuthorized()){
+        if(!${$name}){
+         return $this->resolveErrors([ (object) ["key" => "data missing", "message" => ["please add data for ".${$name}]] ],null,null,400 );
+        }
+        {$validationSegment}
+        $model = app($this->modelName);
+        $res = $model::create(${$name});
+        $objects = (array) {$name}Input::getObjects();
+        if(!empty($objects)){
+            foreach ($objects as  $object) {
+                $plural = $object->plural;
+                $name = $object->plural;
+                if (isset(${$name}[$name])) {
+                    $res->$plural()->sync(${$name}[$name]);
+                }
+            }
+        }
+        return $this->resolveResponse($res);
+        }
+
+        return $this->resolveErrors([ (object) ["key" => "unauthorized", "message" => ["denied permission"]] ],null,null,403 );
+    }
+
+    protected function resolveUpdateField($root, $args) {
+        ${$name} = isset($args['{$name}']) ? $args['{$name}'] : false;
+        if($this->isAuthorized()){
+            if(!${$name}){
+            return $this->resolveErrors([ (object) ["key" => "data missing", "message" => ["please add data for ".${$name}]] ],null,null,400 );
+            }
+            $objects = (array) {$name}Input::getObjects();
+            $filtered{$name} = array_filter(${$name}, function($kk) use($objects){ if(in_array($kk,array_keys($objects)) ){ return false;} return true;},ARRAY_FILTER_USE_KEY);
+            $new{$name} = isset($args['New']) ? $args['New'] : false;
+            $relatedNew = [];
+            $objectsByPlural = collect($objects)->pluck('plural')->toArray();
+            $filteredNew{$name} = array_filter($new{$name}, function($kk) use($objects, &$relatedNew, $objectsByPlural){
+                 if(in_array($kk, $objectsByPlural) ){
+                    $relatedNew[$kk] = $kk; return false;
+                  }
+              return true;
+            },ARRAY_FILTER_USE_KEY);
+            $obj = $this->modelName::where($filtered{$name});
+            $res = $obj->update($filteredNew{$name});
+            //if(!empty($relatedNew)){
+            // foreach($relatedNew as $t => $related){
+            //    $f = array_flip(array_keys($objects));
+            //    if(array_key_exists($t, $f)){
+            //     switch($objects[$t]->type){
+            //        case '_mtm_':
+            //       $p = $objects[$t]->plural;
+            //        $obj->first()->$p()->sync(collect($new{$name}[$related])->pluck('id'));
+            //       break;
+            //    }
+            //   }
+            // }
+            //}
+            if(!empty($objects)){
+                foreach ($objects as  $object) {
+                    $plural = $object->plural;
+                    $name = $object->plural;
+                    if (isset($new{$name}[$name])) {
+                        $obj->first()->$plural()->sync($new{$name}[$name]);
+                    }
+                }
+            }
+            return $this->resolveResponse($obj->first());
+        }
+        return $this->resolveErrors([ (object) ["key" => "unauthorized", "message" => ["denied permission"]] ],null,null,403 );
+    }
+
+    protected function resolveDeleteField($root, $args) {
+        ${$name} = isset($args['{$name}']) ? $args['{$name}'] : false;
+        if($this->isAuthorized()){
+            if(!${$name}){
+            return $this->resolveErrors([ (object) ["key" => "data missing", "message" => ["please add data for ".${$name}]] ],null,null,400 );
+            }
+            $new{$name} = isset($args['New']) ? $args['New'] : false;
+            $res = $this->modelName::where(${$name})->delete();
+            return $this->resolveResponse($res);
+        }
+        return $this->resolveErrors([ (object) ["key" => "unauthorized", "message" => ["denied permission"]] ],null,null,403 );
+    }
+
+}

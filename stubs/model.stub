@@ -1,0 +1,13 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Database\Eloquent\Model;
+//DummySDTraitInclude
+
+class DummyClass extends Model
+{
+    
+    protected $connection = "DummyConnection" ;
+    //DummySDTrait
+}

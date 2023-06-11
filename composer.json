@@ -1,0 +1,29 @@
+{
+    "name": "adz/core",
+    "description": "adz core package",
+    "license": "MIT",
+    "url": "packages/adz/core",
+    "authors": [{
+        "name": "Gaber abdo",
+        "email": "futureslasher@gmail.com"
+    }],
+    "minimum-stability": "dev",
+    "require": {
+        "folklore/graphql": "~1.0.0",
+        "laravel/passport": "^4.0",
+        "doctrine/dbal": "^2.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "adz\\core\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "adz\\core\\ServiceProvider"
+            ]
+        }
+    }
+
+}
